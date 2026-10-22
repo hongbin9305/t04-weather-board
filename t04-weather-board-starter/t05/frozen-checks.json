@@ -1,0 +1,60 @@
+{
+  "task": "T05",
+  "project": "T04 WEATHER LOG",
+  "version": "frozen-1",
+  "fixed_before_ai_a_changes": true,
+  "base_commit": "30e882224b929bcc85ba6eae223594dc3d248e55",
+  "rules": "A와 B 동일 입력·동일 기대값·동일 판정 기준; 수정 금지",
+  "checks": [
+    {
+      "id": "T05-01",
+      "input": "공개 결과물 URL 시크릿 창 접속",
+      "expected": "로그인 없이 WEATHER LOG 표출"
+    },
+    {
+      "id": "T05-02",
+      "input": "실제 데이터 조회 성공 1회",
+      "expected": "기온·°C·출처·관측 시각·조회 시각·KST 표출, 원자료=저장값=화면값"
+    },
+    {
+      "id": "T05-03",
+      "input": "reset 후 NORMAL-D1-A",
+      "expected": "fresh/none, 행 1건, 값 100"
+    },
+    {
+      "id": "T05-04",
+      "input": "이어서 NORMAL-D1-B",
+      "expected": "fresh/none, 같은 날짜 동일 record ID, 행 1건, 값 105"
+    },
+    {
+      "id": "T05-05",
+      "input": "이어서 NORMAL-D2",
+      "expected": "fresh/none, 행 2건, 둘째 날 값 120, 변화 +15"
+    },
+    {
+      "id": "T05-06",
+      "input": "reset, D1-A, D1-B, TIMEOUT",
+      "expected": "stale/timeout, 행 1건, 마지막 정상값 105, 재시도 표시"
+    },
+    {
+      "id": "T05-07",
+      "input": "reset, D1-A, D1-B, AUTH-401",
+      "expected": "stale/auth, 행 1건, 마지막 정상값 105, 재시도 표시"
+    },
+    {
+      "id": "T05-08",
+      "input": "reset, D1-A, D1-B, RATE-429",
+      "expected": "stale/rate_limit, 행 1건, 마지막 정상값 105, 재시도 표시"
+    },
+    {
+      "id": "T05-09",
+      "input": "reset, D1-A, D1-B, OFFLINE",
+      "expected": "stale/offline, 행 1건, 마지막 정상값 105, 재시도 표시"
+    },
+    {
+      "id": "T05-10",
+      "input": "reset, D1-A, D1-B, SCHEMA-BREAK, RECOVER-D2",
+      "expected": "오류 중 stale/schema·105·행1 유지, 복구 fresh/none·120·행2·변화+15"
+    }
+  ]
+}
