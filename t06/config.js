@@ -1,0 +1,1 @@
+window.PDS_CONFIG={url:"https://krgebzcfvgflrkjisaxd.supabase.co",key:"sb_publishable_XeyQYYYXSWxKBmtKqShq0g_drUUGO57"};
