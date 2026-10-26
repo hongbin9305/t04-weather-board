@@ -1,0 +1,1 @@
+module.exports=function(req,res){res.setHeader('Cache-Control','no-store');res.status(200).json({url:'https://krgebzcfvgflrkjisaxd.supabase.co',publishableKey:'sb_publishable_XeyQYYYXSWxKBmtKqShq0g_drUUGO57'})};
