@@ -1,0 +1,105 @@
+{
+  "schema_version": 2,
+  "task_id": "T06",
+  "title": "Plan Do See",
+  "time_zone": "Asia/Seoul",
+  "storage": "Supabase PostgreSQL",
+  "login": false,
+  "access": "anonymous_public",
+  "warning": "지금은 로그인이 없어 링크를 아는 사람은 누구나 볼 수 있습니다. 남이 봐도 괜찮은 내용만 넣으세요",
+  "tables": {
+    "pds06_plans": {
+      "primary_key": "id",
+      "fields": [
+        "id",
+        "title",
+        "start_date",
+        "end_date",
+        "priority",
+        "success_criteria",
+        "estimated_minutes",
+        "next_improvement",
+        "created_at",
+        "updated_at"
+      ],
+      "relations": {
+        "tasks": "pds06_tasks.plan_id",
+        "revisions": "pds06_plan_revisions.plan_id"
+      }
+    },
+    "pds06_plan_revisions": {
+      "primary_key": "id",
+      "fields": [
+        "id",
+        "plan_id",
+        "snapshot",
+        "saved_at"
+      ],
+      "foreign_keys": {
+        "plan_id": "pds06_plans.id"
+      }
+    },
+    "pds06_tasks": {
+      "primary_key": "id",
+      "fields": [
+        "id",
+        "plan_id",
+        "title",
+        "description",
+        "due_date",
+        "priority",
+        "tags",
+        "estimated_minutes",
+        "is_done",
+        "deleted_at",
+        "created_at",
+        "updated_at"
+      ],
+      "foreign_keys": {
+        "plan_id": "pds06_plans.id"
+      }
+    },
+    "pds06_runs": {
+      "primary_key": "id",
+      "fields": [
+        "id",
+        "task_id",
+        "started_at",
+        "ended_at",
+        "actual_minutes",
+        "blocker",
+        "created_at"
+      ],
+      "foreign_keys": {
+        "task_id": "pds06_tasks.id"
+      }
+    },
+    "pds06_completions": {
+      "primary_key": "task_id",
+      "fields": [
+        "task_id",
+        "completed_at"
+      ],
+      "foreign_keys": {
+        "task_id": "pds06_tasks.id"
+      },
+      "rule": "one lifetime completion event per task even after undo and re-complete"
+    }
+  },
+  "rules": {
+    "kst_date": "Asia/Seoul for today comparison, stored plan/due calendar dates in yyyy-mm-dd",
+    "timestamps": "timestamptz UTC",
+    "duration_unit": "minutes",
+    "late": "not done and due date earlier than KST today",
+    "blocked": "distinct tasks with one or more nonempty blockers",
+    "plan_count": "nondeleted tasks",
+    "done_count": "current completed tasks",
+    "estimated_total": "sum tasks estimated_minutes",
+    "actual_total": "sum all related runs actual_minutes",
+    "delta": "actual_total - estimated_total",
+    "deletion": "soft delete task via deleted_at",
+    "history": "old plan preserved by before update trigger",
+    "completion": "unique task_id constraint plus insert-on-transition trigger",
+    "public_access": "anon RLS read/write enabled intentionally for no-login teaching app"
+  }
+}
