@@ -21,3 +21,10 @@
 ## 보안 판단
 - SQL 결과의 0행 차단은 RLS 통과 자료이며 HTTP 응답코드 403/404 자체의 증거는 아니다.
 - 노출 금지: 비밀번호, access/refresh token, secret key, 전체 비밀번호 해시.
+
+## 추가 시험 · 2026-10-27
+- A 본인 로그인으로 auth.sessions 내 유효 세션 1건 확인.
+- A→B: foreign_read=0, foreign_update=0, foreign_delete=0, visible_plans=3. authenticated 역할 및 session_id claim 사용. BEGIN/ROLLBACK으로 원본 불변.
+- 익명 anon 역할에서 pds07_plans 테이블 SELECT: PostgreSQL 42501 permission denied (직접 DB 역할 시험).
+- SQL 차단 결과는 실측 완료. HTTP 401/404 응답 자체는 아직 네트워크 요청으로 실측하지 못함.
+- A→B 및 B→A 모두 유효 로그인 시 자료 격리를 확인했으며 이전의 미확인 A→B 기록을 이번 시험으로 보완함.
